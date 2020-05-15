@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} Register|anonymous {% endblock %}
+
+{% load static %}
+
+
+
+
+{% block body %}
+<body class="bg-light">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-sm-6 offset-sm-3">
+
+
+                    <h1>Register</h1>
+           
+
+
+                        <form method="POST">
+
+                            <div class="form-group">
+                                    {% csrf_token %}
+                                {{ form.label_tag }}
+                                {{ form }}
+                            </div>
+                            <input type="submit" class="btn btn-primary" value="submit"/>
+                            {% if form.errors %}
+                              password does not match
+                            {% endif %}
+                        </form>
+                        <p>already have an account?  <a href="{% url 'login' %}">login</a> </p>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock body %}
+
+
+
