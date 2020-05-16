@@ -177,7 +177,8 @@ def NoteOverview(request):
 
 @api_view(['GET'])
 def NoteList(request):
-    MyNote = Note.objects.filter(owner=request.user).order_by('-id')
+    # MyNote = Note.objects.filter(owner=request.user).order_by('-id')
+    MyNote = Note.objects.all()
     serializer = NoteSerializer(MyNote, many=True)
     return Response(serializer.data)
 
