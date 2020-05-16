@@ -9,6 +9,8 @@ from rest_framework import generics, mixins
 from rest_framework import serializers
 from .serializers import NoteSerializer
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
 
 #END OF REST-API IMPORTS
 
@@ -167,18 +169,27 @@ class NoteView(generics.RetrieveUpdateDestroyAPIView):
         return Note.objects.filter(owner=self.request.user)
 
 
-
-class NoteCreateView(mixins.CreateModelMixin, generics.ListAPIView):
+class NoteCreateView(generics.ListCreateAPIView):
+    # mixins.CreateModelMixin, generics.ListAPIView
     permission_classes = [IsAuthenticated]
     lookup_field = 'pk'
     serializer_class = NoteSerializer
+
+    # def get(self, request): 
+    #     MyNote = Note.objects.filter(owner=self.request.user)
+    #     serializer = NoteSerializer(MyNote, many=True)
+    #     return Response({"notes": serializer.data})
 
     def get_queryset(self): 
         MyNote = Note.objects.filter(owner=self.request.user)
         return MyNote
 
+    # def get(self, request, *args, **kwargs):
+    #     return self.list(request, *args, *kwargs)
+
+
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        return serializer.save(owner=self.request.user)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)

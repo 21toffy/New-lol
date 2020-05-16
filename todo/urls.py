@@ -23,8 +23,9 @@ urlpatterns = [
 
     
 
-    path('api-notes/<pk>', views.NoteView.as_view(), name='note-home' ),
-    path('api-notes/', views.NoteCreateView.as_view(), name='note-create' ),
+    path('mynotes/<pk>', views.NoteView.as_view(), name='note-home' ),
+    path('mynotes/', views.NoteCreateView.as_view(), name='note-create' ),
+    # path('user-list/', views.userList.as_view(), name='user-list' ),
 
     path('notes/<slug:slug>/<int:pk>/', include([
         path('',views.note_detail, name='note_detail'),
@@ -32,4 +33,4 @@ urlpatterns = [
         path('delete', views.delete_note, name='note_confirm_delete')
         ]))
     
-]
+] 

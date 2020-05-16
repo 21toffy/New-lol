@@ -1,0 +1,44 @@
+body{
+    font-family: 'Nunito', sans-serif;
+  }
+  .jumbotron-odi-hero{
+  padding: 0rem 0rem;
+   position: relative;
+   max-width: 100%;
+
+  }
+  .jumbotron-odi-dark{
+   max-width: 100%;
+   padding: 0px;
+
+  }
+
+  .jumbotron-overlay {
+   height:100%;
+   padding: 40px 0;
+   color:#fff;
+
+  }
+  .jumbotron-padding{
+   padding-top: 1rem;
+
+  }
+
+  .btn-circle {
+     border-radius: 30px;
+  }
+
+  .latest-news {
+   border-bottom: .25rem solid transparent;
+   border-bottom-color: #007bff;
+  }
+
+.Products {
+    height:64px;
+    width:64px;
+}
+.head-bann-br{
+ margin-top: 5px;
+ margin-bottom: 5px;
+ padding-top:5px;
+}
