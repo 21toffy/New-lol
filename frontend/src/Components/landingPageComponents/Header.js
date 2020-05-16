@@ -3,7 +3,9 @@ import './landingPage.css';
 
 function Header(){
     return (
-        <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark nav-masthead">
+        <div>
+          <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark nav-masthead head-bann-br">
+          {/* className = 'head-bann-br' */}
         <div className="container">
           <a className="navbar-brand" href="#"> <h3 className="masthead-brand mb-0"><i className="fas fa-fire-alt"></i></h3></a>
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,6 +33,10 @@ function Header(){
           </div>
           </div>
         </nav>
+        <div className= 'head-bann-br'>
+
+        </div>
+        </div>
     )
 }
 
