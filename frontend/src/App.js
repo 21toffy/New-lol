@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
-import Header from './Components/landingPageComponents/Header';
-import Content from './Components/landingPageComponents/Content';
-import Footer from './Components/landingPageComponents/footer';
+// import Header from './Components/landingPageComponents/Header';
+// import Content from './Components/landingPageComponents/Content';
+// import Footer from './Components/landingPageComponents/footer';
 
 
 
@@ -14,11 +14,14 @@ class App extends React.Component{
       activeItem:{
         id:null,
         title:'',
+        note:'',
         completed:false,     
       },
       editing:false,
     }
     this.fetchTasks = this.fetchTasks.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
 
   };
   componentWillMount(){
@@ -34,25 +37,44 @@ class App extends React.Component{
        })
        )
   }
+  handleChange(e){
+    // var name = e.target.name;
+    var value = e.target.value;
+    console.log(value)
+    this.setState({
+      activeItem:{
+        ...this.state.activeItem,
+        title:value,
+        note:value
+      }
+    })
+
+  }
+
+  handleSubmit(e){
+    e.prevetDefault()
+    alert('ITEM: ', this.state.activeItem)
+  }
+
   render(){
     var  notes  = this.state.noteList;
     return(
      <div className = 'container'>
        <div id = 'note-container'>
           <div id = 'form-wrapper'>
-            <form id="form">
+            <form onSubmit = {this.handleSubmit} id="form">
               <div className="flex-wrapper">
 
                 <div style={{flex: 6}}>
-                  <input className="form-control" id="title"type="text" name="title" placeholder="Add note title.." />
+                  <input onChange={this.handleChange} className="form-control" id="title"type="text" name="title" placeholder="Add note title.." />
                 </div>
 
                 <div className = 'input-spacing' style={{flex: 6}}>
-                  <input className="form-control input-text-area" id="text" type="text" name="text" placeholder="Add note text.." />
+                  <input onChange={this.handleChange} className="form-control input-text-area" id="text" type="text" name="text" placeholder="Add note text.." />
                 </div>
 
                 <div style={{flex: 1}}>
-                  <input id="submit" className="btn btn-warning" type="submit" name="Add" />
+                  <input  id="submit" className="btn btn-warning" type="submit" name="Add" />
                 </div>
 
               </div>
