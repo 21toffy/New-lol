@@ -10,6 +10,8 @@ from rest_framework import serializers
 from .serializers import NoteSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
 
 
 #END OF REST-API IMPORTS
@@ -161,12 +163,70 @@ def delete_note(request, slug, pk):
 #NOTE_API
 
 
+
+@api_view(['GET'])
+def NoteOverview(request):
+    Note_Urls = {
+        'List':'/note-list/',
+        'Detail':'/note-detail/<str:pk>/',
+        'Create':'/note-create/',
+        'Update':'/note-update/<str:pk>/',
+        'Delete':'/note-delete/<str:pk>/',
+    }
+    return Response(Note_Urls)
+
+@api_view(['GET'])
+def NoteList(request):
+    MyNote = Note.objects.filter(owner=request.user).order_by('-id')
+    serializer = NoteSerializer(MyNote, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def NoteDetail(request, pk):
+    MyNote = Note.objects.get(id=pk)
+    serializer = NoteSerializer(MyNote, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def NoteCreate(request):
+    serializer = NoteSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+def NoteUpdate(request, pk):
+    MyNote = Note.objects.get(id=pk)
+    serializer = NoteSerializer(instance =MyNote, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['DELETE'])
+def NoteDelete(request, pk):
+    MyNote = Note.objects.get(id=pk)
+    MyNote.delete()
+    return Response('item deleted')
+
+
+
+
+
+
+
+
+
+
+'''
 class NoteView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = NoteSerializer
 
     def get_queryset(self):
-        return Note.objects.filter(owner=self.request.user)
+        MyNote = Note.objects.filter(owner=self.request.user)
+        print (MyNote.pk)
+        return MyNote
 
 
 class NoteCreateView(generics.ListCreateAPIView):
@@ -182,6 +242,8 @@ class NoteCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self): 
         MyNote = Note.objects.filter(owner=self.request.user)
+        # print (self.request.user.note_set.all())
+       
         return MyNote
 
     # def get(self, request, *args, **kwargs):
@@ -192,6 +254,7 @@ class NoteCreateView(generics.ListCreateAPIView):
         return serializer.save(owner=self.request.user)
 
     def post(self, request, *args, **kwargs):
+        print (pk)
         return self.create(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
@@ -199,6 +262,8 @@ class NoteCreateView(generics.ListCreateAPIView):
 
     def patch(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
+'''   
+
 
     
 

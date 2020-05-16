@@ -5,7 +5,7 @@ from todo import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.LandingView.as_view() , name='landing' ),
+    path('home', views.LandingView.as_view() , name='landing' ),
     path('', include('todo.urls',namespace='notes')),
     path('', include('urlshortner.urls',namespace='urlshortner')),
     path('accounts/login/', views.login_view, name='login'),

@@ -6,7 +6,7 @@ from .models import *
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model=Note
-        fields = ('id', 'owner','title', 'note', 'date', 'slug')
+        fields = ('pk', 'owner','title', 'note', 'date', 'slug')
         read_only_fields = ['owner']
         # depth =    2
 
