@@ -18,16 +18,16 @@ export default class NoteServices{
         const url = `${API_URL}/notes/${pk}`;
         return axios.get(url).then(response => response.data);
     }
-    deletenotes(MyNote){
-        const url = `${API_URL}/notes/${customer.pk}`;
+    deletenotes(note){
+        const url = `${API_URL}/notes/${note.pk}`;
         return axios.delete(url);
     }
-    createnotes(MyNote){
+    createnotes(note){
         const url = `${API_URL}/notes/`;
-        return axios.post(url,customer);
+        return axios.post(url,note);
     }
-    updatenotes(MyNote){
-        const url = `${API_URL}/notes/${customer.pk}`;
-        return axios.put(url,customer);
+    updatenotes(note){
+        const url = `${API_URL}/notes/${note.pk}`;
+        return axios.put(url,note);
     }
 }

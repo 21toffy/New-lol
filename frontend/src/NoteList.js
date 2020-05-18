@@ -36,7 +36,7 @@ handleDelete(e,pk){
 nextPage(){
     var  self  =  this;
     console.log(this.state.nextPageURL);
-    noteService.getCustomersByURL(this.state.nextPageURL).then((result) => {
+    noteService.getnotesByURL(this.state.nextPageURL).then((result) => {
         self.setState({ notes:  result.data, nextPageURL:  result.nextlink})
     });
 }
@@ -44,7 +44,7 @@ nextPage(){
 render() {
 
     return (
-        <div  className="customers--list">
+        <div  className="notes--list">
             <table  className="table">
             <thead  key="thead">
             <tr>
@@ -57,7 +57,7 @@ render() {
             </tr>
             </thead>
             <tbody>
-            {this.state.customers.map( c  =>
+            {this.state.notes.map( c  =>
                 <tr  key={c.pk}>
                 <td>{c.pk}  </td>
                 <td>{c.title}</td>
