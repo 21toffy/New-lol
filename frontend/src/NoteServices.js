@@ -7,7 +7,7 @@ export default class NoteServices{
 
 
     getnotes() {
-        const url = `${API_URL}/mynotes/`;
+        const url = `${API_URL}/notes/`;
         return axios.get(url).then(response => response.data);
     }
     getnotesByURL(link){
@@ -15,19 +15,19 @@ export default class NoteServices{
         return axios.get(url).then(response => response.data);
     }
     getnotes(pk) {
-        const url = `${API_URL}/mynotes/${pk}`;
+        const url = `${API_URL}/notes/${pk}`;
         return axios.get(url).then(response => response.data);
     }
     deletenotes(MyNote){
-        const url = `${API_URL}/mynotes/${customer.pk}`;
+        const url = `${API_URL}/notes/${customer.pk}`;
         return axios.delete(url);
     }
     createnotes(MyNote){
-        const url = `${API_URL}/mynotes/`;
+        const url = `${API_URL}/notes/`;
         return axios.post(url,customer);
     }
     updatenotes(MyNote){
-        const url = `${API_URL}/mynotes/${customer.pk}`;
+        const url = `${API_URL}/notes/${customer.pk}`;
         return axios.put(url,customer);
     }
 }

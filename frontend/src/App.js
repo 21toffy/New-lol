@@ -29,13 +29,12 @@ class App extends React.Component{
   }
 
   fetchTasks(){
-    fetch('http://127.0.0.1:8000/note-list/')
-    .then(response => response.json())
-    .then( data =>
+    fetch('http://127.0.0.1:8000/mynotes/')
+    .then(response => {
       this.setState({
-        noteList : data
+        noteList : response.data
        })
-       )
+      })
   }
   handleChange(e){
     // var name = e.target.name;
@@ -54,6 +53,37 @@ class App extends React.Component{
   handleSubmit(e){
     e.prevetDefault()
     alert('ITEM: ', this.state.activeItem)
+    var url = '127.0.0.1:8000/note-create/'
+
+    if(this.state.editing === true){
+      url = `127.0.0.1:8000/note-update/${ this.state.activeItem.id}/`
+      this.setState({
+        editing:false
+      })
+    }
+
+
+
+    fetch(url, {
+      method:'POST',
+      headers:{
+        'Content-type':'application/json',
+        // 'X-CSRFToken':csrftoken,
+      },
+      body:JSON.stringify(this.state.activeItem)
+    }).then((response)  => {
+        this.fetchTasks()
+        this.setState({
+           activeItem:{
+          id:null, 
+          title:'',
+          note:'',
+          completed:false,
+        }
+        })
+    }).catch(function(error){
+      console.log('ERROR:', error)
+    })
   }
 
   render(){
@@ -82,7 +112,7 @@ class App extends React.Component{
 
           </div>
           <div id = 'list-wrapper'>
-            {notes.map(function(note, index){
+            {this.noteList.map(function(note, index){
 
               return (
                 <div key = {index} className = "task-wrapper flex-wrapper">

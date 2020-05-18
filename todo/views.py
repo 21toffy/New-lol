@@ -14,6 +14,14 @@ from rest_framework.decorators import api_view
 
 
 
+
+
+from django.shortcuts import render
+from django.http import JsonResponse
+
+
+
+
 #END OF REST-API IMPORTS
 
 from .models import Note
@@ -164,6 +172,80 @@ def delete_note(request, slug, pk):
 
 
 
+
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework import status
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .serializers import *
+
+
+@api_view(['GET', 'POST'])
+def notes_list(request):
+
+    if request.method == 'GET':
+        data = []
+        nextPage = 1
+        previousPage = 1
+        note = Note.objects.all()
+        page = request.GET.get('page', 1)
+        paginator = Paginator(note, 5)
+        try:
+            data = paginator.page(page)
+        except PageNotAnInteger:
+            data = paginator.page(1)
+        except EmptyPage:
+            data = paginator.page(paginator.num_pages)
+
+        serializer = NoteSerializer(data,context={'request': request} ,many=True)
+        if data.has_next():
+            nextPage = data.next_page_number()
+        if data.has_previous():
+            previousPage = data.previous_page_number()
+
+        return Response({'data': serializer.data , 'count': paginator.count, 'numpages' : paginator.num_pages, 'nextlink': '/notes/?page=' + str(nextPage), 'prevlink': '/notes/?page=' + str(previousPage)})
+
+    elif request.method == 'POST':
+        serializer = NoteSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def notes_detail(request, pk):
+    """
+ Retrieve, update or delete a customer by id/pk.
+ """
+    try:
+        note = Note.objects.get(pk=pk)
+    except Note.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = NoteSerializer(note,context={'request': request})
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = NoteSerializer(note, data=request.data,context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        note.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
+
+
+'''
 @api_view(['GET'])
 def NoteOverview(request):
     Note_Urls = {
@@ -177,7 +259,7 @@ def NoteOverview(request):
 
 @api_view(['GET'])
 def NoteList(request):
-    # MyNote = Note.objects.filter(owner=request.user).order_by('-id')
+  
     MyNote = Note.objects.all()
     serializer = NoteSerializer(MyNote, many=True)
     return Response(serializer.data)
@@ -185,15 +267,28 @@ def NoteList(request):
 @api_view(['GET'])
 def NoteDetail(request, pk):
     MyNote = Note.objects.get(id=pk)
-    serializer = NoteSerializer(MyNote, many=True)
+    serializer = NoteSerializer(MyNote)
     return Response(serializer.data)
 
-@api_view(['POST'])
+# @api_view(['POST'])
+# def NoteCreate(request):
+#     serializer = NoteSerializer(data=request.data)
+#     if serializer.is_valid():
+#         serializer.save()
+#     return Response(serializer.data)
+
+
+from rest_framework import status
+
+@api_view([ 'POST'])
 def NoteCreate(request):
-    serializer = NoteSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-    return Response(serializer.data)
+    if request.method == 'POST':
+        serializer = NoteSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['POST'])
@@ -220,29 +315,34 @@ def NoteDelete(request, pk):
 
 
 '''
-class NoteView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = NoteSerializer
 
-    def get_queryset(self):
-        MyNote = Note.objects.filter(owner=self.request.user)
-        print (MyNote.pk)
-        return MyNote
+# class NoteView(generics.RetrieveUpdateDestroyAPIView):
+#     permission_classes = [IsAuthenticated]
+#     serializer_class = NoteSerializer
+
+#     def get_queryset(self):
+#         MyNote = Note.objects.all()
+#         # MyNote = Note.objects.filter(owner=self.request.user)
+#         print (MyNote.pk)
+#         return MyNote
 
 
-class NoteCreateView(generics.ListCreateAPIView):
-    # mixins.CreateModelMixin, generics.ListAPIView
-    permission_classes = [IsAuthenticated]
-    lookup_field = 'pk'
-    serializer_class = NoteSerializer
+# class NoteCreateView(generics.ListCreateAPIView):
+#     # mixins.CreateModelMixin, generics.ListAPIView
+#     permission_classes = [IsAuthenticated]
+#     lookup_field = 'pk'
+#     serializer_class = NoteSerializer
 
+'''
     # def get(self, request): 
-    #     MyNote = Note.objects.filter(owner=self.request.user)
+        # MyNote = Note.objects.all()
+        # MyNote = Note.objects.filter(owner=self.request.user)
     #     serializer = NoteSerializer(MyNote, many=True)
     #     return Response({"notes": serializer.data})
 
-    def get_queryset(self): 
-        MyNote = Note.objects.filter(owner=self.request.user)
+    def get_queryset(self):
+        MyNote = Note.objects.all() 
+        # MyNote = Note.objects.filter(owner=self.request.user)
         # print (self.request.user.note_set.all())
        
         return MyNote
@@ -263,8 +363,8 @@ class NoteCreateView(generics.ListCreateAPIView):
 
     def patch(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
-'''   
 
 
     
 
+'''   
